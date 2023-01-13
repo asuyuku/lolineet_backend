@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 
 public class MybatisPlusGenerateTest {
-    @Test
+//    @Test
     public void generate() {
         FastAutoGenerator.create("jdbc:mysql://192.168.199.2:3306/lolineet", "root", "123456")
             .globalConfig(builder -> {

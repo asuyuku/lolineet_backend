@@ -1,6 +1,8 @@
 spring:
   application:
     name: lolineet
+  profiles:
+    active: dev
   jackson:
     generator:
       write-numbers-as-strings: true
@@ -8,16 +10,6 @@ spring:
     multipart:
       max-file-size: 2000MB
       max-request-size: 2GB
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.199.2:3306/lolineet?useSSL=true&serverTimezone=UTC
-    username: root
-    password: 123456
 server:
   port: 8080
-minio:
-  endpoint: http://192.168.199.2:9000
-  accessKey: lolineet
-  secretKey: Meng970926
-  bucketName: lolineet
 
