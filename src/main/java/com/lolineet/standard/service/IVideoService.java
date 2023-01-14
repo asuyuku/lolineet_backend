@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface IVideoService extends IService<Video> {
 
-    String uploadVideo(Long districtId,MultipartFile file);
+    Video uploadVideo(MultipartFile file);
 
     void bindVideoAnime(Long videoId, Long animeId);
 }

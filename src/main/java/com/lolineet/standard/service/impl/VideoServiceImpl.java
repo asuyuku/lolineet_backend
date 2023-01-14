@@ -13,6 +13,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lolineet.standard.util.ExtractVideoFirstFrameUtil;
 import com.lolineet.standard.util.MinioUtil;
 import io.minio.ObjectWriteResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +32,7 @@ import java.io.IOException;
 @Service
 public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements IVideoService {
 
+    Logger logger = LoggerFactory.getLogger(VideoServiceImpl.class);
     @Autowired
     private MinioUtil minioUtil;
 
@@ -43,25 +46,25 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     private AnimeVideoMiddleMapper animeVideoMiddleMapper;
 
     @Override
-    public String uploadVideo(Long districtId,MultipartFile file) {
+    public Video uploadVideo(MultipartFile file) {
         String bucket = "lolineet";
-        String url= minioUtil.uploadFileSingle(bucket, file);
+        String url = minioUtil.uploadFileSingle(bucket, file);
         String imageUrl = "";
         try {
             String imageName = ExtractVideoFirstFrameUtil.ffmpegExtractImageForVideoStream(file.getInputStream());
-            imageUrl=minioUtil.putObject(bucket,imageName,imageName);
+            imageUrl = minioUtil.putObject(bucket, imageName, imageName);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        logger.info("视频上传成功，url:{}", url);
         Video video = new Video();
         video.setBucketName(bucket);
         video.setId(Cloud.id.next());
-        video.setDistrictId(districtId);
-        video.setName( file.getOriginalFilename());
+        video.setName(file.getOriginalFilename());
         video.setUrl(url);
         video.setImageUrl(imageUrl);
         videoMapper.insert(video);
-        return url;
+        return video;
     }
 
     @Override

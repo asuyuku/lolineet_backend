@@ -27,10 +27,17 @@ public class VideoController {
     private IVideoService videoService;
 
     @ApiOperation("上传视频")
-    @PostMapping(name = "/uploadVideo",consumes = "multipart/*",headers = "content-type=multipart/form-data")
-    public Result uploadVideo(Long districtId,@ApiParam(name = "file",value = "文件") MultipartFile file) {
-        String fileUrl = videoService.uploadVideo(districtId,file);
-        return Result.ok("上传成功",fileUrl);
+    @PostMapping("/uploadVideo")
+    public Result uploadVideo(MultipartFile file) {
+        Video video = videoService.uploadVideo(file);
+        return Result.ok("上传成功",video);
+    }
+
+    @ApiOperation("保存视频信息")
+    @PostMapping("/saveVideo")
+    public Result saveVideo(@ApiParam("视频信息") @RequestBody Video video) {
+        videoService.updateById(video);
+        return Result.ok("保存成功");
     }
 
     @ApiOperation("绑定视频和番剧")
